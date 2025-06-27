@@ -16,16 +16,24 @@ public class DemoJDBC {
 
          */
 
+        int uId = 14;
+        String name = "ji bhai";
+        int marks = 70;
+        int marksIdUpdate = 2;
+        int deletedId = 7;
+
         Class.forName("org.postgresql.Driver");
         String url = "jdbc:postgresql://localhost:5432/myFirstDB";
         String uName = "postgres";
         String pass = "Hulkbuster#008";
         String query = "select * from student ";
-        String queryInsert = "insert into student values (10, 'dilawar', 90)";
+        String updatedName = "phr se update ho gya maaz";
 
-        String queryUpdate = "update student set sname = 'maaz is updated' where sid = 1  ";
+        String queryInsert = "insert into student values (?, ?, ?)";
+        String queryUpdate = "update student set sname = ? where sid = ?  ";
+        String queryDelete = "delete from student where  sid = ? ";
 
-        String queryDelete = "delete from student where  sid = 3 ";
+
         DemoJDBC myClass = new DemoJDBC();
 
         Connection con = DriverManager.getConnection(url, uName, pass);
@@ -40,7 +48,13 @@ public class DemoJDBC {
         myClass.printResultSetValues(rt);
 
         //Insert Values
-        boolean insertresult = st.execute(queryInsert);
+//        boolean insertresult = st.execute(queryInsert);
+        PreparedStatement insertResult = con.prepareStatement(queryInsert);
+        insertResult.setInt(1,uId);
+        insertResult.setString(2,name);
+        insertResult.setInt(3,marks);
+        insertResult.execute();
+
         System.out.println("After inserting");
 
         //getting values
@@ -48,14 +62,19 @@ public class DemoJDBC {
         myClass.printResultSetValues(st.executeQuery(query));
 
         //update values
-        st.execute(queryUpdate);
+        PreparedStatement updateResult = con.prepareStatement(queryUpdate);
+        updateResult.setString(1, updatedName);
+        updateResult.setInt(2, marksIdUpdate);
+        updateResult.execute();
 
         //getting values
         System.out.println("===================");
         myClass.printResultSetValues(st.executeQuery(query));
 
         //delete values
-        boolean deleteResult = st.execute(queryDelete);
+//        boolean deleteResult = st.execute(queryDelete);
+        PreparedStatement deletedResult = con.prepareStatement(queryDelete);
+        deletedResult.setInt(1,deletedId);
 
         //getting values
         System.out.println("===================");
